@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Genre Classification</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Music Genre Classification 🎶</h1>
+        <p>Upload an MP3 file to classify its genre!</p>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".mp3" required>
+            <button type="submit">Predict Genre</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch('/predict', { method: 'POST', body: formData });
+            const resultDiv = document.getElementById("result");
+            if (response.ok) {
+                const data = await response.json();
+                resultDiv.innerHTML = `<h2>Top Genre: ${data.top_genre}</h2>
+                                       <h3>Genre Distribution:</h3>`;
+                data.distribution.forEach(([genre, perc]) => {
+                    resultDiv.innerHTML += `<p>${genre}: ${perc.toFixed(2)}%</p>`;
+                });
+            } else {
+                const error = await response.json();
+                resultDiv.innerHTML = `<p>Error: ${error.error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

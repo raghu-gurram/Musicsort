@@ -1,0 +1,9 @@
+Python 3.7+
+TensorFlow
+librosa
+numpy
+matplotlib
+Pillow
+scikit-learn
+Flask
+Streamlit
